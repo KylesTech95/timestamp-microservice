@@ -35,7 +35,7 @@ app.get("/api/:date?", (req,res)=>{
   let { date } = req.params
   let unix, utc;
   if(ifUnix(date)){
-    unix = date;
+    unix = +date;
     let temp_utc = new Date(convert2UTC(unix)).toString(); 
     let arr = temp_utc.split` `
     let day = arr[0]
@@ -47,7 +47,7 @@ app.get("/api/:date?", (req,res)=>{
     utc = formatUTC(day,dayNum,month,year,time,zone,utc)
       }
   else{
-    unix = new Date(date).getTime();
+    unix = +(new Date(date).getTime());
     let temp_utc = new Date(convert2UTC(unix)).toString(); 
     let arr = temp_utc.split` `
     let day = arr[0]
