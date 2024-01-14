@@ -33,25 +33,42 @@ function convert2UTC(unix){
 function formatUTC(day,dayNum,month,year,time,zone,utc){
       return `${day}, ${dayNum} ${month} ${year} ${time} ${zone}`
 }
+// check for leap year
+let isLeapYear = (year) => {
+let firstLeap = 1972;
+let four = 4;
+return (year % firstLeap) % four === 0 
+}
+
 // is date valid?
 function dateValidity(dateString) {
-  return !isNaN(Date.parse(dateString));
+  // test february dates
+  let day =   new Date(dateString).toString().split` `[2]
+  let month = new Date(dateString).getMonth();
+  let year = new Date(dateString).getFullYear()
+  let possible_march = new Date(dateString).toString().split` `[1]
+  let bool;
+  return !isNaN(Date.parse(dateString)) && new Date(dateString) 
+
 }
 // request to unix & request to utc
 app.get("/api/:date?", (req,res)=>{
+  // let first = req.query.first
+//     let last = req.query.last
+
+//     res.json({name: `${first} ${last}`})
   let { date } = req.params
   if(!date){
     date = new Date()
   }
-  let unix, utc;
-
+  let unix=new Date(req.query.unix).getTime(), utc=new Date(req.query.utc).toString();
   if(ifUnix(date)){
     unix = +date;
     let futureUnix = new Date(convert2UTC(unix)).getTime()
     let unix2UTC=new Date(futureUnix).toString();
-    console.log(date)
-    console.log(futureUnix)
-    console.log(unix2UTC)
+    // console.log(date)
+    // console.log(futureUnix)
+    // console.log(unix2UTC)
     let arr = unix2UTC.split` `
     let day = arr[0]
     let month = arr[1]
@@ -82,9 +99,7 @@ app.get("/api/:date?", (req,res)=>{
       res.json({ error : "Invalid Date" })
     }
   }
-  
 })
-
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
