@@ -22,6 +22,9 @@ app.get("/", function (req, res) {
 function ifUnix(unixTime){
   return /^\d+$/.test(unixTime)
 }
+function ifUTC(utcTime){
+  return /-/g.test(utcTime)
+}
 // convert valid date to unix time (milliseconds)
 function convert2UTC(unix){
   return +unix+((60000*60)*5)
@@ -30,36 +33,45 @@ function convert2UTC(unix){
 function formatUTC(day,dayNum,month,year,time,zone,utc){
       return `${day}, ${dayNum} ${month} ${year} ${time} ${zone}`
 }
+// is date valid?
+function dateValidity(dateString) {
+  return !isNaN(Date.parse(dateString));
+}
 // request to unix & request to utc
 app.get("/api/:date?", (req,res)=>{
   let { date } = req.params
   let unix, utc;
+
   if(ifUnix(date)){
     unix = +date;
-    let temp_utc = new Date(convert2UTC(unix)).toString(); 
+    let temp_utc = new Date(convert2UTC(unix)).toString();
     let arr = temp_utc.split` `
     let day = arr[0]
     let month = arr[1]
     let dayNum = arr[2]
     let year = arr[3]
     let time = arr[4]
-    let zone = arr[5].slice(0,3)
-    utc = formatUTC(day,dayNum,month,year,time,zone,utc)
+    utc = formatUTC(day,dayNum,month,year,time,`GMT`,utc)
+    res.json({unix:unix,utc:utc})
       }
-  else{
-    unix = +(new Date(date).getTime());
-    let temp_utc = new Date(convert2UTC(unix)).toString(); 
-    let arr = temp_utc.split` `
-    let day = arr[0]
-    let month = arr[1]
-    let dayNum = arr[2]
-    let year = arr[3]
-    let time = arr[4]
-    let zone = arr[5].slice(0,3)
-    utc = formatUTC(day,dayNum,month,year,time,zone,utc)
-  }
+  else if((ifUTC(date))){
+    if(dateValidity(date)){
+      unix = +(new Date(date).getTime());
+      let temp_utc = new Date(convert2UTC(unix)).toString();
+      let arr = temp_utc.split` `
+      let day = arr[0]
+      let month = arr[1]
+      let dayNum = arr[2]
+      let year = arr[3]
+      let time = arr[4]
+      utc = formatUTC(day,dayNum,month,year,time,`GMT`,utc)
       res.json({unix:unix,utc:utc})
-      
+    }
+    else{
+      res.json({ error : "Invalid Date" })
+    }
+  }
+  
 })
 
 // your first API endpoint... 
