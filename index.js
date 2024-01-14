@@ -47,8 +47,12 @@ app.get("/api/:date?", (req,res)=>{
 
   if(ifUnix(date)){
     unix = +date;
-    let temp_utc = new Date(convert2UTC(unix)).toString();
-    let arr = temp_utc.split` `
+    let futureUnix = new Date(convert2UTC(unix)).getTime()
+    let unix2UTC=new Date(futureUnix).toString();
+    console.log(date)
+    console.log(futureUnix)
+    console.log(unix2UTC)
+    let arr = unix2UTC.split` `
     let day = arr[0]
     let month = arr[1]
     let dayNum = arr[2]
@@ -60,8 +64,12 @@ app.get("/api/:date?", (req,res)=>{
   else if((ifUTC(date))){
     if(dateValidity(date)){
       unix = +(new Date(date).getTime());
-      let temp_utc = new Date(convert2UTC(unix)).toString();
-      let arr = temp_utc.split` `
+      let futureUnix = new Date(convert2UTC(unix)).getTime();
+      let unix2UTC=new Date(futureUnix).toString();
+      console.log(date)
+      console.log(futureUnix)
+      console.log(unix2UTC)
+      let arr = unix2UTC.split` `
       let day = arr[0]
       let month = arr[1]
       let dayNum = arr[2]
