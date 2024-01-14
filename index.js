@@ -40,6 +40,9 @@ function dateValidity(dateString) {
 // request to unix & request to utc
 app.get("/api/:date?", (req,res)=>{
   let { date } = req.params
+  if(!date){
+    date = new Date()
+  }
   let unix, utc;
 
   if(ifUnix(date)){
