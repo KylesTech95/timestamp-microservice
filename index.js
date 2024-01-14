@@ -48,7 +48,7 @@ function dateValidity(dateString) {
   let year = new Date(dateString).getFullYear()
   let possible_march = new Date(dateString).toString().split` `[1]
   let bool;
-  return !isNaN(Date.parse(dateString)) && new Date(dateString) 
+  return !isNaN(Date.parse(dateString))
 
 }
 // request to unix & request to utc
